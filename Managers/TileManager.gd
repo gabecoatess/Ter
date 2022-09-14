@@ -40,17 +40,24 @@ func initalizeWorld():
 			createTile(tile, 4)
 			
 func createTile(coords, blockId):
-	var tileObject = Node2D.new()
-	var tileSprite = Sprite.new()
-	tileObject.set_name("area2d")
-	tileSprite.set_name("sprite")
-	add_child(tileObject)
-	tileObject.add_child(tileSprite)
-	tileSprite.texture = blockTilemap
-	tileSprite.vframes = blockTilemap.get_size().y / 16
-	tileSprite.hframes = blockTilemap.get_size().x / 16
-	tileSprite.frame = blockId
-	tileObject.position = Vector2((coords[0] * 16) + 8, (coords[1] * 16) + 8)
+	if blockId != 0:
+		var tileObject = StaticBody2D.new()
+		var tileSprite = Sprite.new()
+		var tileCollider = CollisionShape2D.new()
+		var rectangle = RectangleShape2D.new()
+		rectangle.extents = Vector2(8,8)
+		tileCollider.shape = rectangle
+		tileCollider.set_name("collider")
+		tileObject.set_name("area2d")
+		tileSprite.set_name("sprite")
+		add_child(tileObject)
+		tileObject.add_child(tileCollider)
+		tileObject.add_child(tileSprite)
+		tileSprite.texture = blockTilemap
+		tileSprite.vframes = blockTilemap.get_size().y / 16
+		tileSprite.hframes = blockTilemap.get_size().x / 16
+		tileSprite.frame = blockId
+		tileObject.position = Vector2((coords[0] * 16) + 8, (coords[1] * 16) + 8)
 
 func _process(delta):
 	var tempX = floor(get_viewport().get_mouse_position().x / 16)
