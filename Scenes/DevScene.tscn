@@ -1,23 +1,19 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Managers/TileManager.gd" type="Script" id=1]
 [ext_resource path="res://Entities/PlayerObject.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Managers/WorldManager.cs" type="Script" id=4]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
 
-[node name="Sprite" type="Sprite" parent="."]
-
-[node name="Label" type="Label" parent="."]
-margin_right = 40.0
-margin_bottom = 14.0
-text = "coords"
-
-[node name="Label2" type="Label" parent="."]
-margin_top = 20.0
-margin_right = 43.0
-margin_bottom = 34.0
-text = "Grass"
+[node name="WorldManager" type="Node2D" parent="."]
+script = ExtResource( 4 )
 
 [node name="PlayerObject" parent="." instance=ExtResource( 2 )]
 position = Vector2( 112, 37 )
+
+[node name="CoordsUI" type="Label" parent="."]
+margin_right = 43.0
+margin_bottom = 14.0
+text = "coords"

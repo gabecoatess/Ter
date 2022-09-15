@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 export var move_speed := 100
-export var gravity := 2000
+export var gravity := 13000
 
 var velocity = Vector2.ZERO
 
