@@ -30,14 +30,14 @@ namespace TileManagement {
 		// ==================
 		// = Custom Methods =
 		// ==================
-		public void createTile(Node2D tileHolder, Tile tile, Int32 x, Int32 y, Int32 coordX, Int32 coordY) {
+		public void createTile(Node2D tileHolder, Tile tile, Int32 worldCoordX, Int32 worldCoordY, Int32 gameCoordX, Int32 gameCoordY) {
 
 			StaticBody2D tileObject = new StaticBody2D();
 			Sprite tileSprite = new Sprite();
 			CollisionShape2D tileCollider = new CollisionShape2D();
 			RectangleShape2D colliderBounds = new RectangleShape2D();
 
-			tileObject.Name = $"{x},{y}";
+			tileObject.Name = $"{gameCoordX},{gameCoordY}";
 			tileHolder.AddChild(tileObject);
 
 			tileSprite.Name = "Tile_Sprite";
@@ -57,20 +57,30 @@ namespace TileManagement {
 			tileSprite.Vframes = (int)MainSpritesheet.GetData().GetSize().y / 16;
 			tileSprite.Hframes = (int)MainSpritesheet.GetData().GetSize().x / 16;
 
-            if (tileHolder.GetNode($"{coordX},{coordY + 1}").GetNode("Tile_Sprite").Frame == 1) {
+            if (tileHolder.GetNodeOrNull($"{gameCoordX},{gameCoordY - 1}") != null) {
                 tileSprite.Frame = 2;
             } else {
-                tileSprite.Frame = 1;
+            	tileSprite.Frame = 1;
+				if (tileHolder.GetNodeOrNull($"{gameCoordX},{gameCoordY + 1}") != null) {
+					tileHolder.GetNode($"{gameCoordX},{gameCoordY + 1}").GetNode<Sprite>("Tile_Sprite").Frame = 2;
+				} else {
+					GD.Print(tileHolder.GetNodeOrNull($"{gameCoordX},{gameCoordY + 1}") == null);
+					GD.Print($"{gameCoordX},{gameCoordY}");
+				}
             }
-
-            GD.Print(tileHolder.GetNode($"{x},{y + 1}"));
-
-			tileObject.Position = new Vector2(x, y);
+		
+			tileObject.Position = new Vector2(worldCoordX, worldCoordY);
 		}
 	
-        public void deleteTile(Node2D worldManager, Int32 x, Int32 y) {
+        public void deleteTile(Node2D tileHolder, Int32 gameCoordX, Int32 gameCoordY) {
 
-            worldManager.GetNode($"{x},{y}").QueueFree();
+			if (tileHolder.GetNodeOrNull($"{gameCoordX},{gameCoordY + 1}") == null) {
+				tileHolder.GetNode($"{gameCoordX},{gameCoordY}").QueueFree();
+			} else {
+				tileHolder.GetNode($"{gameCoordX},{gameCoordY + 1}").GetNode<Sprite>("Tile_Sprite").Frame = 1;
+				tileHolder.GetNode($"{gameCoordX},{gameCoordY}").QueueFree();
+			}
+            
         }
     }
 }
